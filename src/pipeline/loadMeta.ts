@@ -11,6 +11,7 @@ export interface DocumentMetaSection {
     published?: string;
     pubDate?: string;
     copyright?: string;
+    description?: string;
 }
 
 export interface DocumentMeta {
@@ -59,12 +60,14 @@ function buildSection(value: unknown): DocumentMetaSection | undefined {
     const published = pickString(record.published);
     const pubDate = pickString(record.pubDate);
     const copyright = pickString(record.copyright);
+    const description = pickString(record.description);
 
     if (title) section.title = title;
     if (author) section.author = author;
     if (published) section.published = published;
     if (pubDate) section.pubDate = pubDate;
     if (copyright) section.copyright = copyright;
+    if (description) section.description = description;
 
     return Object.keys(section).length > 0 ? section : undefined;
 }
@@ -102,21 +105,38 @@ export async function loadMeta(): Promise<DocumentMeta> {
             logger.info(`メタ情報ファイル ${filename} を読み込みます`);
             const meta = await loadYamlMeta(fullPath);
             logMetaInfo(meta, filename);
+            logger.succ('メタ情報の読み込みが完了しました');
             return meta;
         }
     }
     logger.info('メタ情報ファイルが見つからなかったため、テンプレートのデフォルト値を使用します');
     logMetaInfo(DEFAULT_META, 'default');
+    logger.succ('メタ情報の読み込みが完了しました');
     return DEFAULT_META;
 }
 
 function logMetaInfo(meta: DocumentMeta, source: string) {
-    logger.info(`\tsource: ${source}`);
-    logger.info(`\ttitle: ${meta.title}`);
-    logger.info(`\tauthor: ${meta.author}`);
-    logger.info(`\tpublished: ${meta.published}`);
+    logger.info(`├─ meta source: ${source}`);
+    logger.info(`│   ├─ title: ${meta.title}`);
+    logger.info(`│   ├─ author: ${meta.author}`);
+    logger.info(`│   ├─ published: ${meta.published}`);
     if (meta.description) {
-        logger.info(`\tdescription: ${meta.description}`);
+        logger.info(`│   ├─ description: ${meta.description}`);
     }
-    logger.info(`\tcopyright: ${meta.copyright}`);
+    logger.info(`│   └─ copyright: ${meta.copyright}`);
+    logSection('frontCover', meta.frontCover);
+    logSection('backCover', meta.backCover);
+}
+
+function logSection(label: string, section?: DocumentMetaSection) {
+    if (!section) {
+        return;
+    }
+    logger.info(`├─ ${label}:`);
+    if (section.title) logger.info(`│   ├─ title: ${section.title}`);
+    if (section.author) logger.info(`│   ├─ author: ${section.author}`);
+    if (section.published) logger.info(`│   ├─ published: ${section.published}`);
+    if (section.pubDate) logger.info(`│   ├─ pubDate: ${section.pubDate}`);
+    if (section.description) logger.info(`│   ├─ description: ${section.description}`);
+    if (section.copyright) logger.info(`│   └─ copyright: ${section.copyright}`);
 }

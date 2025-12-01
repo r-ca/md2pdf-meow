@@ -15,6 +15,7 @@ async function runPipeline() {
     await prepareWorkspace();
     const assetManager = new AssetManager();
     const { outputPath: markdownPath, orderedFiles } = await concatMarkdown(assetManager);
+    assetManager.report();
     await injectToc(markdownPath);
     await renderMarkdownToHtml(markdownPath, WORK_MARKDOWN_HTML, assetManager, orderedFiles);
     const meta = await loadMeta();

@@ -61,7 +61,7 @@ function extractImageSources(tokens: Token[]) {
 
 export class AssetManager {
     private assetMap = new Map<string, string>();
-    private copiedTargets = new Set<string>();
+    private copiedCount = 0;
 
     private key(filePath: string, src: string) {
         return `${filePath}::${src}`;
@@ -99,13 +99,12 @@ export class AssetManager {
 
         const segments = splitSegments(relativeFromDocuments);
         const { targetRelativePosix, targetPath } = buildTarget(segments);
+        const targetRelativePath = path.relative('.', targetPath);
 
-        if (!this.copiedTargets.has(targetPath)) {
-            await ensureDir(path.dirname(targetPath));
-            await fs.copyFile(absoluteSource, targetPath);
-            this.copiedTargets.add(targetPath);
-            logger.succ(`画像をコピー: ${path.relative('.', targetPath)} (元: ${relativeFromDocuments})`);
-        }
+        logAssetCopyStart(relativeFromDocuments, targetRelativePath);
+        await ensureDir(path.dirname(targetPath));
+        await fs.copyFile(absoluteSource, targetPath);
+        this.copiedCount++;
 
         this.assetMap.set(this.key(filePath, rawSource), targetRelativePosix);
         if (rawSource !== normalized) {
@@ -119,4 +118,14 @@ export class AssetManager {
             this.assetMap.get(this.key(filePath, normalizeSource(src)))
         );
     }
+
+    report() {
+        logger.succ(`asset copy total: ${this.copiedCount} file(s)`);
+    }
+}
+
+function logAssetCopyStart(source: string, target: string) {
+    logger.info('├─ asset copy');
+    logger.info(`│   ├─ src: ${abbreviate(source)}`);
+    logger.info(`│   └─ dst: ${abbreviate(target)}`);
 }
