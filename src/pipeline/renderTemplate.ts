@@ -5,6 +5,7 @@ import tidy from 'htmltidy2';
 
 import { logger } from '../logger.js';
 import { writeText } from '../utils/fs.js';
+import { DocumentMeta } from './loadMeta.js';
 
 const renderFile = promisify(ejs.renderFile);
 const tidyHtml = promisify(tidy.tidy);
@@ -13,9 +14,9 @@ const tidyHtml = promisify(tidy.tidy);
  * scripts/ejs.js (2SC1815J/md2pdf, MIT License) を TypeScript 化し、
  * HTML Tidy 設定もフォーク元に合わせている。
  */
-export async function renderTemplate(templatePath: string, outputPath: string) {
+export async function renderTemplate(templatePath: string, outputPath: string, meta: DocumentMeta) {
     logger.info('テンプレート HTML を描画しています…');
-    const rendered = await renderFile(templatePath);
+    const rendered = await renderFile(templatePath, { meta });
     const tidied = await tidyHtml(rendered, {
         doctype: 'html5',
         indent: 'auto',

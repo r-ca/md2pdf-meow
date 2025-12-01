@@ -3,25 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="openaction" content="#view=fit">
-  <meta name="author" content="r-ca" />
-  <title>Template</title>
+  <meta name="author" content="<%= meta.author %>" />
+  <% if (meta.description && meta.description.length > 0) { %>
+  <meta name="description" content="<%= meta.description %>" />
+  <% } %>
+  <title><%= meta.title %></title>
   <link rel="stylesheet" href="../css/github-markdown.css">
   <link rel="stylesheet" href="../css/custom.css">
 </head>
 <body>
   <div class="FrontCover">
-    <h1>Template</h1>
-    <div class="Published">0000/000/00</div>
-    <div class="Author">ろむねこ</div>
+    <h1><%= (meta.frontCover && meta.frontCover.title) || meta.title %></h1>
+    <div class="Published"><%= (meta.frontCover && (meta.frontCover.published || meta.frontCover.pubDate)) || meta.published %></div>
+    <div class="Author"><%= (meta.frontCover && meta.frontCover.author) || meta.author %></div>
   </div>
   <article class="markdown-body">
   <%- include('../work/all_md.html') %>
   </article>
   <div class="BackCover">
     <div class="Colophon">
-      <span class="Title">Template</span><br>
-      <span class="PubDate">0000/000/00</span><br>
-      <span class="Copyright">template</span>
+      <span class="Title"><%= (meta.backCover && meta.backCover.title) || meta.title %></span><br>
+      <span class="PubDate"><%= (meta.backCover && (meta.backCover.pubDate || meta.backCover.published)) || meta.published %></span><br>
+      <span class="Copyright"><%= (meta.backCover && meta.backCover.copyright) || meta.copyright %></span>
     </div>
   </div>
 </body>

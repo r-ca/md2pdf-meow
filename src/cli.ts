@@ -8,6 +8,7 @@ import { prepareWorkspace } from './pipeline/prepareWorkspace.js';
 import { AssetManager } from './pipeline/assetManager.js';
 import { renderMarkdownToHtml } from './pipeline/renderMarkdown.js';
 import { renderTemplate } from './pipeline/renderTemplate.js';
+import { loadMeta } from './pipeline/loadMeta.js';
 
 async function runPipeline() {
     logger.info('md2pdf-meow のビルドを開始します。');
@@ -16,7 +17,8 @@ async function runPipeline() {
     const { outputPath: markdownPath, orderedFiles } = await concatMarkdown(assetManager);
     await injectToc(markdownPath);
     await renderMarkdownToHtml(markdownPath, WORK_MARKDOWN_HTML, assetManager, orderedFiles);
-    await renderTemplate(TEMPLATE_FILE, WORK_TEMPLATE_HTML);
+    const meta = await loadMeta();
+    await renderTemplate(TEMPLATE_FILE, WORK_TEMPLATE_HTML, meta);
     await inlineAssets(WORK_TEMPLATE_HTML, DIST_INLINE_HTML);
     await generatePdf(DIST_INLINE_HTML, DIST_PDF);
 }

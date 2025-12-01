@@ -15,5 +15,24 @@ TypeScript ベースの Markdown → HTML → PDF 変換パイプラインです
 - `documents/` 配下の Markdown からは相対パスで画像を参照でき、ビルド時に `work/assets/` へ自動コピーしたうえで HTML / PDF に反映します。外部 URL やデータ URI もそのまま扱えます。
 - PDF 生成は `puppeteer-html-pdf` を使い、Chrome 不在時には明示的に検出するようになっています。
 
+### メタ情報のカスタマイズ
+- テンプレート固有のタイトル・著者・発行日などは `documents/_meta.yaml`（または `_meta.yml`）に記述します（存在しない場合はテンプレートのデフォルト値を使用）。
+- 例:
+  ```yaml
+  title: md2pdf-meow サンプル
+  author: ろむねこ
+  published: 2024/07/01
+  description: モバイルオーダー用ドキュメント
+  copyright: © 2024 rca
+  frontCover:
+    title: md2pdf-meow
+    published: 2024/07/01
+  backCover:
+    title: md2pdf-meow
+    pubDate: 2024/07/01
+    copyright: rca
+  ```
+- `frontCover` / `backCover` の各値は任意で、未指定時には `title` や `published` などの共通値が利用されます。
+
 ## 移植元
 - https://github.com/2SC1815J/md2pdf
