@@ -100,9 +100,23 @@ export async function loadMeta(): Promise<DocumentMeta> {
         const fullPath = path.join(DOCUMENTS_DIR, filename);
         if (await pathExists(fullPath)) {
             logger.info(`メタ情報ファイル ${filename} を読み込みます`);
-            return loadYamlMeta(fullPath);
+            const meta = await loadYamlMeta(fullPath);
+            logMetaInfo(meta, filename);
+            return meta;
         }
     }
     logger.info('メタ情報ファイルが見つからなかったため、テンプレートのデフォルト値を使用します');
+    logMetaInfo(DEFAULT_META, 'default');
     return DEFAULT_META;
+}
+
+function logMetaInfo(meta: DocumentMeta, source: string) {
+    logger.info(`\tsource: ${source}`);
+    logger.info(`\ttitle: ${meta.title}`);
+    logger.info(`\tauthor: ${meta.author}`);
+    logger.info(`\tpublished: ${meta.published}`);
+    if (meta.description) {
+        logger.info(`\tdescription: ${meta.description}`);
+    }
+    logger.info(`\tcopyright: ${meta.copyright}`);
 }

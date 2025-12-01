@@ -16,6 +16,9 @@
     <h1><%= (meta.frontCover && meta.frontCover.title) || meta.title %></h1>
     <div class="Published"><%= (meta.frontCover && (meta.frontCover.published || meta.frontCover.pubDate)) || meta.published %></div>
     <div class="Author"><%= (meta.frontCover && meta.frontCover.author) || meta.author %></div>
+    <% if (meta.description && meta.description.length > 0) { %>
+    <p class="Description"><%= meta.description %></p>
+    <% } %>
   </div>
   <article class="markdown-body">
   <%- include('../work/all_md.html') %>
@@ -25,6 +28,10 @@
       <span class="Title"><%= (meta.backCover && meta.backCover.title) || meta.title %></span><br>
       <span class="PubDate"><%= (meta.backCover && (meta.backCover.pubDate || meta.backCover.published)) || meta.published %></span><br>
       <span class="Copyright"><%= (meta.backCover && meta.backCover.copyright) || meta.copyright %></span>
+      <% if (meta.description && meta.description.length > 0) { %>
+      <br>
+      <span class="Description"><%= meta.description %></span>
+      <% } %>
     </div>
   </div>
 </body>
