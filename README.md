@@ -27,13 +27,15 @@ TypeScript ベースの Markdown → HTML → PDF 変換パイプラインです
   frontCover:
     title: md2pdf-meow
     published: 2024/07/01
+    description: 表紙だけ別文言を載せる場合に利用
   backCover:
     title: md2pdf-meow
     pubDate: 2024/07/01
     copyright: rca
+    description: 裏表紙に掲載する紹介文
   ```
-- `frontCover` / `backCover` の各値は任意で、未指定時には `title` や `published` などの共通値が利用されます。
-- `description` は `<meta name="description">` と表紙/奥付の本文に表示されます。長すぎる場合は YAML 側で適宜整形してください。
+- `frontCover` / `backCover` の各値は任意で、未指定時には `title` や `published` などの共通値が利用されます。`description` もそれぞれ上書き可能です。
+- `description` は `<meta name="description">` と表紙/裏表紙の本文に表示されます。長すぎる場合は YAML 側で適宜整形してください。
 
 ## 移植元
 - https://github.com/2SC1815J/md2pdf
