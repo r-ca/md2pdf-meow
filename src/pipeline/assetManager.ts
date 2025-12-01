@@ -8,6 +8,7 @@ import { logger } from '../logger.js';
 import { ensureDir, pathExists } from '../utils/fs.js';
 
 const scanner = new MarkdownIt({ html: true });
+const LOG_PATH_MAX = 80;
 
 function isExternalSource(value: string) {
     return /^[a-zA-Z][\w+.-]*:/.test(value);
@@ -40,6 +41,14 @@ function buildTarget(relativeSegments: string[]) {
     const targetRelativePosix = ['assets', ...encodedSegments].join('/');
     const targetPath = path.join(WORK_DIR, 'assets', ...encodedSegments);
     return { targetRelativePosix, targetPath };
+}
+
+function abbreviatePath(value: string) {
+    if (value.length <= LOG_PATH_MAX) {
+        return value;
+    }
+    const keep = Math.floor((LOG_PATH_MAX - 3) / 2);
+    return `${value.slice(0, keep)}...${value.slice(-keep)}`;
 }
 
 function extractImageSources(tokens: Token[]) {
@@ -126,6 +135,6 @@ export class AssetManager {
 
 function logAssetCopyStart(source: string, target: string) {
     logger.info('├─ asset copy');
-    logger.info(`│   ├─ src: ${abbreviate(source)}`);
-    logger.info(`│   └─ dst: ${abbreviate(target)}`);
+    logger.info(`│   ├─ src: ${abbreviatePath(source)}`);
+    logger.info(`│   └─ dst: ${abbreviatePath(target)}`);
 }
