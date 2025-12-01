@@ -12,26 +12,37 @@
   <link rel="stylesheet" href="../css/custom.css">
 </head>
 <body>
+  <% 
+    const frontCover = meta.frontCover || {};
+    const backCover = meta.backCover || {};
+    const frontTitle = frontCover.title || meta.title;
+    const frontAuthor = frontCover.author || meta.author;
+    const frontPublished = frontCover.published || frontCover.pubDate || meta.published;
+    const frontDescription = frontCover.description || meta.description;
+    const backTitle = backCover.title || meta.title;
+    const backPublished = backCover.pubDate || backCover.published || meta.published;
+    const backCopyright = backCover.copyright || meta.copyright;
+    const backDescription = backCover.description || meta.description;
+  %>
   <div class="FrontCover">
-    <h1><%= (meta.frontCover && meta.frontCover.title) || meta.title %></h1>
-    <div class="Published"><%= (meta.frontCover && (meta.frontCover.published || meta.frontCover.pubDate)) || meta.published %></div>
-    <div class="Author"><%= (meta.frontCover && meta.frontCover.author) || meta.author %></div>
-    <% if (meta.description && meta.description.length > 0) { %>
-    <p class="Description"><%= meta.description %></p>
+    <h1><%= frontTitle %></h1>
+    <div class="Published"><%= frontPublished %></div>
+    <div class="Author"><%= frontAuthor %></div>
+    <% if (frontDescription) { %>
+    <p class="Description"><%= frontDescription %></p>
     <% } %>
   </div>
   <article class="markdown-body">
   <%- include('../work/all_md.html') %>
   </article>
   <div class="BackCover">
+    <% if (backDescription) { %>
+    <p class="Description"><%= backDescription %></p>
+    <% } %>
     <div class="Colophon">
-      <span class="Title"><%= (meta.backCover && meta.backCover.title) || meta.title %></span><br>
-      <span class="PubDate"><%= (meta.backCover && (meta.backCover.pubDate || meta.backCover.published)) || meta.published %></span><br>
-      <span class="Copyright"><%= (meta.backCover && meta.backCover.copyright) || meta.copyright %></span>
-      <% if (meta.description && meta.description.length > 0) { %>
-      <br>
-      <span class="Description"><%= meta.description %></span>
-      <% } %>
+      <span class="Title"><%= backTitle %></span><br>
+      <span class="PubDate"><%= backPublished %></span><br>
+      <span class="Copyright"><%= backCopyright %></span>
     </div>
   </div>
 </body>
